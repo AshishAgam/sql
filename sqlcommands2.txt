@@ -1,0 +1,104 @@
+<--date and time datatype-->
+select('28-nov-2023'::Date);
+
+select('01:23:30 am est'::TIME with time zone);
+
+select('01:23 am'::TIME);
+
+select('28-nov-2023 01:23 pm'::timestamp with time zone);
+
+<--interval-->
+select('1 day'::interval);
+select('1 day 20 h'::interval);
+select('1 day 20 h 330 m 45 s'::interval);
+select('1 day 20 h 330 m 45 s'::interval)-('1 d'::interval);
+select('28-nov-2023 1:23 am'::timestamp with time zone)-('8 d'::interval);
+
+select
+('28-nov-2023 1:23 am'::timestamp with time zone)
+-
+('20-nov-2023 1:23 am'::timestamp with time zone);
+
+<--database-side validation and constraints-->
+<--create new table product-->
+create table products(
+id serial primary key,
+name varchar(40),
+department varchar(40),
+price integer,
+weight integer
+);
+
+insert into products (name,department,weight)
+values
+('Pants','Clothes',1);
+
+<--alter table and set not null-->
+alter table products
+alter column price
+set not null;
+
+<--alter table and set default-->
+alter table products
+alter column price
+set default 999;
+
+<--update table-->
+update products
+set price=9999
+where price is null;
+
+<--alter table and add unique-->
+alter table products
+add unique(name,department);
+
+<--alter table and drop constraint-->
+alter table products
+drop constraint products_name_department_key;
+
+<--alter table and add multi unique-->
+alter table products
+add unique(name,department);
+
+<--alter table and add check-->
+alter table products
+add check(price>0);
+
+<--create table and add multi check-->
+create table orders(
+id serial primary key,
+name varchar(40)not null,
+created_at timestamp not null,
+est_delivery timestamp not null,
+check(created_at < est_delivery));
+
+<--insert into order and check-->
+insert into orders (name,created_at,est_delivery)
+values
+('shirt','2000-nov-20 01:00 am','2000-nov-25 01:00 am');
+
+<-- start Instagram-->
+Table users {
+  id SERIAL [pk, increment]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+  username VARCHAR(30)
+}
+
+Table posts {
+  id SERIAL [pk, increment]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+  url VARCHAR(200)
+  user_id INTEGER [ref: > users.id]
+}
+
+Table comments {
+  id SERIAL [pk, increment]
+  created_at TIMESTAMP
+  updated_at TIMESTAMP
+  contents VARCHAR(240)
+  user_id INTEGER [ref: > users.id]
+  post_id INTEGER [ref: > posts.id]
+}
+<--end Instagram-->
